@@ -17,43 +17,61 @@ app.get("/", (req, res) => {
 
 app.post("/operation", (req, res) => {
     let { operation_type, x, y } = req.body;
-    let result = 0;
     operation_type = operation_type.toLowerCase();
-    const options = ["multiply", "multiplication", "addition", "add", "subtraction", "subtract",]
+    x = Number(x);
+    y = Number(y);
+    let result;
 
-    // Error validation for requests
-    if (!operation_type) {
-        return res.status(400).json({ error: "Operation type can not be empty" })
-    } else if (options.includes(operation_type) != true) {
-        return res.status(400).json({ error: "Invalid Operation type." })
-    } else if (!(x||y)){
-        return res.status(400).json({error: "X and Y are required"})
-    } else if(typeof(x) != 'number' || typeof(y) != 'number') {
-        return res.status(400).json({ error: "X and Y must be of type integer." })
-    } 
+    // const operationTypeOptions = ["multiply", "multiplication", "product", "*", "addition", "add", "plus", "+", "subtraction", "subtract", "minus", "-" ]
 
+    const addOperations = ["add", "addition", "+", "plus", "sum", "summation"];
+    const subtractOperations = ["subtract", "subtraction", "-", "minus", "difference"];
+    const multiplyOperations = ["multiply", "multiplication", "*", "product", "times", "multiplied"];
 
-    if (operation_type == "multiply" || operation_type == "multiplication") {
-        result = x * y;
-    } 
-    if (operation_type == "subtract" || operation_type == "subtraction") {
-        result = x - y;
-    } 
-    if (operation_type == "add" || operation_type == "addition"){
-        result = x + y;
+    // Function to check if the operation_type matches any of the different operation types synonyms
+    const checkSynonym = (input, arr) => {
+        return arr.some((elem) => {
+            return input.includes(elem)
+        })
     }
 
+    let opr = "Invalid Operation Type";
+    // Didn't use else if because so that the code uses the first operation that the user specifies in the operation_type field from the request body
+    if (checkSynonym(operation_type, addOperations)){
+        opr = "addition";
+    }
+    if (checkSynonym(operation_type, subtractOperations)) {
+        opr = "subtraction";
+    } 
+    if (checkSynonym(operation_type, multiplyOperations)){
+        opr = "multiplication";
+    } 
 
-    console.log("RESUJLT ", operation_type)
-    console.log("RESUJLT ", result)
+    console.log("THE OPR ", opr);
+
+    switch(opr) {
+        case "addition" :
+            result = x + y;
+            break;
+        case "subtraction" :
+            result = x - y;
+            break;
+        case "multiplication" : 
+            result = x * y;
+            break;
+        default: 
+            result = "No result - Invalid operation type";
+            break;
+    }
 
     const response = {
         "slackUsername": "Great Nwamadi",
-        "operation_type": operation_type,
+        "operation_type": opr,
         "result": result
     }
 
     return res.json(response);
+    
 
 })
 
