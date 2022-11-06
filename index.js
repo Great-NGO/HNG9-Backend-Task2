@@ -21,7 +21,6 @@ app.post("/operation", (req, res) => {
     x = Number(x);
     y = Number(y);
     let result;
-
     // const operationTypeOptions = ["multiply", "multiplication", "product", "*", "addition", "add", "plus", "+", "subtraction", "subtract", "minus", "-" ]
 
     const addOperations = ["add", "addition", "+", "plus", "sum", "summation"];
@@ -46,8 +45,6 @@ app.post("/operation", (req, res) => {
     if (checkSynonym(operation_type, multiplyOperations)){
         opr = "multiplication";
     } 
-
-    console.log("THE OPR ", opr);
 
     switch(opr) {
         case "addition" :
